@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<property resource="application.properties" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} %X{key}
+				%X{uri} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>csi-event.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>csi-event.log.%d{yyyy-MM-dd HH:mm:ss.SSS}
+			</FileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS},%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- postgres -->
+	
+	<!-- <appender name="db1" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource
+            class="ch.qos.logback.core.db.DriverManagerConnectionSource">          
+            <driverClass>org.postgresql.Driver</driverClass>
+            <url>${spring.datasource.url}</url> 
+			<user>${spring.datasource.username}</user> 
+			<password>${spring.datasource.password}</password> 
+		</connectionSource>
+		<sqlDialect class="ch.qos.logback.core.db.dialect.PostgreSQLDialect" />
+    </appender> 
+	
+	
+	<appender name="db" class="com.javainuse.interceptor.mydbappender.CsiDBAppender"> 
+		<connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource"> 
+		<driverClass>org.postgresql.Driver</driverClass> 
+		<url>${spring.datasource.url}</url> 
+		<user>${spring.datasource.username}</user> 
+		<password>${spring.datasource.password}</password> 
+		</connectionSource> 
+		<sqlDialect class="ch.qos.logback.core.db.dialect.PostgreSQLDialect" />
+		
+	</appender>
+	 -->
+	<!-- Oracle -->
+	
+	 <appender name="db1" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource
+            class="ch.qos.logback.core.db.DriverManagerConnectionSource">          
+             <driverClass>${spring.datasource.driverClassName}</driverClass>
+            <url>${spring.datasource.url}</url>
+            <user>${spring.datasource.username}</user>
+            <password>${spring.datasource.password}</password>
+         </connectionSource>
+    </appender> 
+	
+	
+	<appender name="db"
+		class="com.javainuse.interceptor.mydbappender.CsiDBAppender">
+		<connectionSource
+			class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+			  <driverClass>${spring.datasource.driverClassName}</driverClass>
+            <url>${spring.datasource.url}</url>
+            <user>${spring.datasource.username}</user>
+            <password>${spring.datasource.password}</password>
+
+	 	</connectionSource>
+	</appender>
+
+
+	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+	    <appender-ref ref="db1" />
+		<appender-ref ref="db" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+
+
+	<root level="ERROR">
+		<appender-ref ref="ASYNC" />
+		<appender-ref ref="db" />
+		<!-- <appender-ref ref="db1" /> -->
+		<!-- <appender-ref ref="STDOUT"/> -->
+	</root>
+</configuration>
